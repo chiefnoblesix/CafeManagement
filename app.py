@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from BCE import *
+from B import *
 from CafeDB import *
 
 
@@ -17,8 +17,16 @@ def create_app():
     app.add_url_rule('/StaffBids','StaffBids', view_func=BidsBoundary.render_all_bids)
     app.add_url_rule('/owner_home','owner_home', view_func=WorkSlotBoundary.render_available_work_slots)
     app.add_url_rule('/render_create_ws','render_create_ws', view_func=CreateWSBoundary.render_create_ws)
-    app.add_url_rule('/render_create_ws/create_ws','create_ws', view_func=CreateWorkslotBoundary.create_workslot, methods=['POST'])
+    app.add_url_rule('/render_create_ws/create_ws','create_ws', view_func=CreateWSBoundary.create_workslot, methods=['POST'])
     app.add_url_rule('/owner_home/delete/<int:id>','delete_work_slot', view_func=DeleteWorkslotBoundary.delete_workslot)
+    app.add_url_rule('/SysAdminHome', 'SysAdminHome', view_func=SysAdminViewB.render_sys_admin)
+    app.add_url_rule('/render_createAcc', 'render_createAcc', view_func=CreateAccountB.render_create_account)
+    app.add_url_rule('/render_createAcc/create_new', 'create_new', view_func=CreateAccountB.create_acc, methods=['POST'])
+    app.add_url_rule('/render_editAcc/<string:id>', 'render_editAcc', view_func=EditAccountB.render_editAcc)
+    app.add_url_rule('/render_editAcc/editAcc/<string:id>', 'editAcc', view_func=EditAccountB.edit_accB, methods=["GET","POST"])
+    
+
+
 
     with app.app_context():
         db.drop_all()
@@ -60,6 +68,14 @@ def create_app():
             userRole = new_role2.role,
         )
 
+        new_admin = Staff(
+            username = "M",
+            password = "M",
+            job = "Admin",
+            avail = "FT",
+            userRole = new_role4.role,
+        )
+
         new_bid = Bids(
             id = 1,
             shift_id = new_workslot.id,
@@ -78,6 +94,7 @@ def create_app():
         db.session.add(new_user)
         db.session.add(new_user2)
         db.session.add(new_bid)
+        db.session.add(new_admin)
         
         db.session.commit()
     return app

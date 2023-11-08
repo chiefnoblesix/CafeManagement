@@ -1,0 +1,120 @@
+{% extends 'base.html' %} 
+
+{% block head %}
+
+<title>New Account</title>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/homepage.css')}}">
+
+{% endblock %}
+
+{% block body %}
+<style> 
+    #new_account_header {
+        padding:10px;
+        margin-top:50px;
+        margin-left: 465px;
+        width: 350px;
+        height: 70px;
+        background-color: hsla(19, 87%, 9%, 0.936);
+        color:blanchedalmond;
+        text-align: center;
+    }
+
+    #new_account_container {
+        padding-left: 50px;
+        padding-top: 20px;
+        margin: 0 auto;
+        width: 350px;
+        height: 400px;
+        background-color: blanchedalmond;
+        color: hsla(19, 87%, 9%, 0.936);
+    }
+
+    #new_account_container label{
+        color:hsla(19, 87%, 9%, 0.936);
+        font-weight: bold;
+        font-size:17px;
+    }
+
+    #new_account_container input{
+        color:hsla(19, 87%, 9%, 0.936);
+        font-weight: bold;
+        background-color: burlywood;
+    }
+
+    #new_account_container select{
+        color:hsla(19, 87%, 9%, 0.936);
+        font-weight: bold;
+        background-color: burlywood;
+    }
+</style>
+
+<nav>
+    <div class = "div left-nav">
+        <h2>CaiPeng</h2>
+    </div>
+    <div class = "right-nav">
+        <img src = "{{ url_for('static', filename='styles/icon.jpg')}}" class = "icon">
+    </div>
+</nav>
+
+<div id="new_account_header">
+    <h1>NEW ACCOUNT</h1>
+</div>
+
+<div id="new_account_container">
+    <form id="account_details" action="{{ url_for('create_new') }}" method="post">
+        <label for="name">Name</label><br>
+        <input type="text" id="name" name="username" required><br><br>
+        <label for="password">Password</label><br>
+        <input type="text" id="password" name="password" required><br><br>
+        <label for="staff_role">Staff Role</label><br>
+        <select name="userRole" id="staff_role">
+            <option value="CafeOwner">Owner</option>
+            <option value="CafeManager">Manager</option>
+            <option value="CafeStaff">Staff</option>
+            <option value="SystemAdmin">Admin</option>
+        </select><br><br>
+        <div id="job_section" style="display: none;">
+            <label for="job">Job</label><br>
+            <select name="job" id="job" >
+                <option disabled selected value="Non-Staff" >Non-Staff</option>
+                <option value="Waiter">Waiter</option>
+                <option value="Chef">Chef</option>
+                <option value="Barista">Barista</option>
+                <option value="Cashier">Cashier</option>
+            </select><br><br>
+        </div>
+        <label for="avail">Availability</label><br>
+        <select name="avail" id="avail">
+            <option value="FT">Full-Time</option>
+            <option value="PT">Part-Time</option>
+        </select><br><br>
+        <button type="submit" id="submit">Create</button>
+        <input type="reset" id="reset" name="reset">
+    </form>
+</div>
+
+<a  href="{{ url_for('SysAdminHome') }}">
+    Back
+</a>
+
+<script>
+    // Get the userRole dropdown element
+    var userRoleDropdown = document.getElementById("staff_role");
+
+    // Get the job_section div element
+    var jobSection = document.getElementById("job_section");
+
+    // Add an event listener to the userRole dropdown
+    userRoleDropdown.addEventListener("change", function () {
+        // If "CafeStaff" is selected, show the job_section; otherwise, hide it
+        if (userRoleDropdown.value === "CafeStaff") {
+            jobSection.style.display = "block";
+        } else {
+            jobSection.style.display = "none";
+        }
+    });
+</script>
+
+{% endblock %} 

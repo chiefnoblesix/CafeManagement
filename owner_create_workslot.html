@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block body %}
+
+
+    <div >
+        <form action="{{ url_for('create_ws') }}" method="POST">
+            <div class="mb-3 mt-3">
+                <label for="shift_type">Shift Type:</label>
+                <input type="text" class="form-control" id="shift_type" name="shift_type" placeholder="Enter shift type" />
+            </div>
+            <div class="mb-3">
+                <label for="date">Date:</label>
+                <input type="date" id="date" name="date" />
+            </div>
+            <div class="form-check mb-3">
+                <label class="form-check-label"> </label>
+            </div>
+        </form>
+    </div>
+    <!-- Modal footer -->
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Create</button>
+        
+    </div>
+
+
+
+{% endblock %}
