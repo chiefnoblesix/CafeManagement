@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+<title>Login Page</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/login.css')}}">
+
+{% endblock %}
+
+{% block body %}
+<body>
+    <div class="loginbox">
+    <img src="{{ url_for('static', filename='styles/icon.jpg')}}" class="icon" >
+        <h1>CAI PENG Login Page</h1>
+        <form action= "{{ url_for('SubmitLogin') }}" method="POST"> 
+            <p>Username</p>
+            <input type="text" id= "username" name="username" placeholder="Enter Username">
+            <p>Password</p>
+            <input type="password" id="password" name="password" placeholder="Enter Password">
+            <p>Select Role</p>
+            <select name="role" id="role">
+                <option value="SystemAdmin">System Admin</option>
+                <option value="CafeOwner">Cafe Owner</option>
+                <option value="CafeManager">Cafe Manager</option>
+                <option value="CafeStaff">Cafe Staff</option>
+            </select>
+            <input type="submit" id="login" value="Login"><br>
+        </form>
+    </div>
+
+   
+</body>
+{% endblock %}
