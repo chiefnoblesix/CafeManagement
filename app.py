@@ -14,6 +14,7 @@ def create_app():
 
     app.add_url_rule('/', 'login',view_func=LogInBoundary.render_login_page, methods=["GET","POST"])
     app.add_url_rule('/login',view_func=SubmitLoginB.SubmitLogin, methods=["POST", "GET"])
+    app.add_url_rule('/logout', 'logout', view_func=LogoutB.logout)
     app.add_url_rule('/StaffBids','StaffBids', view_func=BidsBoundary.render_all_bids)
     app.add_url_rule('/owner_home','owner_home', view_func=WorkSlotBoundary.render_available_work_slots)
     app.add_url_rule('/render_create_ws','render_create_ws', view_func=CreateWSBoundary.render_create_ws)
