@@ -9,6 +9,10 @@ class LogInBoundary:
     def render_login_page():
         return render_template('login.html')
 
+class LogoutB:
+    def logout():
+        return redirect('/')
+
 
 class SubmitLoginB:
     def SubmitLogin():
