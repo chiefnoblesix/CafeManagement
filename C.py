@@ -111,6 +111,10 @@ class UpdateBidC:
     
     def update_bid(id, shift_type, shift_date):
         return BidsEntity.update_bid(id, shift_type, shift_date)
+    
+class StaffSearchC:
+    def search(query, status, date):
+        return WorkSlotEntity.search_workslots(query, status, date)
             
         
 
