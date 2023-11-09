@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+<title>Error</title>
+    
+
+{% endblock %}
+
+{% block body %}
+<body>
+    {% for error in e%}
+    <a>{{ error }}</a>
+
+   
+</body>
+{% endblock %}

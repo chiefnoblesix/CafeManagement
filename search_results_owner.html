@@ -3,7 +3,7 @@
 
 {% block head %}
 
-<title>System Admin Home</title>
+<title>Owner</title>
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/homepage.css')}}">
 
 {% endblock %}
@@ -59,7 +59,7 @@
     </div>
 </nav>
 
-<form action="{{ url_for('search_workslots') }}" method="GET">
+<form action="{{ url_for('owner_search_workslots') }}" method="GET">
     <div class="form-group">
         <label for="query">Search Query:</label>
         <input type="text" name="query" id="query">
@@ -78,7 +78,7 @@
     </div>
     <button type="submit" class="btn btn-primary">Search</button>
 </form>
-<a class="nav-item nav-link" href="{{ url_for('StaffHome') }}">Home</a>
+<a class="nav-item nav-link" href="{{ url_for('owner_home') }}">Home</a>
 
 
 <div id="new_account_container">
