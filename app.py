@@ -26,6 +26,7 @@ def create_app():
         app.add_url_rule('/Bid/<int:slot_id>', 'bid', view_func=BidB.place_bid)
         app.add_url_rule('/StaffHome/render_update/<int:update_id>', 'render_update_bid', view_func=UpdateBidB.render_update_bid)
         app.add_url_rule('/UpdateBid/<int:id>', 'update_bid', view_func=UpdateBidB.update_bid, methods=['POST'])
+        app.add_url_rule('/StaffHome/Search', 'search_workslots', view_func=StaffSearchB.search)
 
         app.add_url_rule('/owner_home','owner_home', view_func=WorkSlotBoundary.render_available_work_slots)
         app.add_url_rule('/render_create_ws','render_create_ws', view_func=CreateWSBoundary.render_create_ws)
