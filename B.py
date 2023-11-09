@@ -1,4 +1,4 @@
-from flask import render_template, request, flash, session, redirect, url_for
+from flask import render_template, request, flash, session, redirect, url_for, session
 from CafeDB import *
 from C import *
 
@@ -8,7 +8,7 @@ class LogInBoundary:
     @staticmethod
     def render_login_page():
         return render_template('login.html')
-
+    
 class LogoutB:
     def logout():
         return redirect('/')
@@ -21,15 +21,15 @@ class SubmitLoginB:
             username = request.form['username']
             password = request.form['password']
             role = request.form['role']
-
+            
             user = LogInController.get_login_from_entity(username, password, role)
 
             if user:
-                # session['user_id'] = user.username  
+                session['user_id'] = username 
                 if role == 'CafeOwner':
                     return redirect(url_for('owner_home'))
                 if role == 'CafeStaff':
-                    return redirect(url_for('StaffBids'))  
+                    return redirect(url_for('StaffHome'))  
                 if role == 'SystemAdmin':
                     return redirect(url_for('SysAdminHome'))
             else:
@@ -44,11 +44,7 @@ class WorkSlotBoundary:
         work_slots = WorkSlotController.get_from_entity()
         return render_template('owner_home.html', work_slots=work_slots)
 
-class BidsBoundary:
-    @staticmethod
-    def render_all_bids():
-        all_bids = BidsController.get_from_entity_bids()
-        return render_template('staff_bids.html', bids=all_bids)
+
 
 
 class CreateWSBoundary:
@@ -76,6 +72,15 @@ class SysAdminViewB:
         all_staff = SysAdminViewC.view_all_staff()
         return render_template('SysADmin_home.html',all_staff=all_staff)
     
+class AdminSearchB:
+    def search():
+        query = request.args.get('query')
+        results = AdminSearchC.search(query)
+        if results is not None:
+            return render_template('search_results.html', query=query, results=results)
+        else:
+            return redirect(url_for('SysAdminHome'))
+    
 
 class CreateAccountB:
     def render_create_account():
@@ -88,6 +93,13 @@ class CreateAccountB:
         job = request.form.get('job')
         avail = request.form.get('avail')
         if CreateAccountC.create_newAcc(username, password, userRole, job, avail):
+            return redirect(url_for('SysAdminHome'))
+        
+class DeleteAccB:
+    def delete_acc(delete_id):
+        if DeleteAccC.delete_acc(delete_id):
+            return redirect(url_for('SysAdminHome'))
+        else:
             return redirect(url_for('SysAdminHome'))
         
 class EditAccountB:
@@ -110,7 +122,58 @@ class EditAccountB:
         else:
             return render_template('editAccnt.html', id=id)
     
+class StaffHomeViewB:
+    def render_staffhome():
+        user_id = session.get('user_id')
+        if user_id is not None:
 
+            all_bids = ViewC.get_from_entity_bids(user_id)
+            return render_template('staff_home.html', bids=all_bids)
+        else:
+            return redirect(url_for('/'))
+
+class DeleteBidB:
+    def delete_bid(id):
+        if DeleteBidC.delete_bid(id) == True:
+            flash('Bid deleted successfully', 'success')
+        else:
+            flash('Bid not found', 'error')
+        return redirect(url_for('StaffHome'))
+    
+class CreateBidB:
+    def render_create(user_id):
+        work_slots = CreateBidC.get_from_entity(user_id)
+        return render_template('staff_create_bids.html', work_slots=work_slots)
+    
+class BidB:
+    def place_bid(slot_id):
+        if BidC.place_the_bid(slot_id):
+            return redirect(url_for('StaffHome'))
+        else:
+            return redirect(url_for('create_bid'))
+        
+class UpdateBidB:
+    def render_update_bid(update_id):
+        bid = UpdateBidC.get_bid_updated(update_id)
+        return render_template('staff_update_bid.html', bid=bid)
+    
+    def update_bid(id):
+        
+        if request.method == 'POST':
+            # Handle form submission, update the bid, and save it to the database
+            shift_type = request.form['shift_type']
+            shift_date = request.form['shift_date']
+            if UpdateBidC.update_bid(id, shift_type, shift_date):
+                return redirect(url_for('StaffHome'))
+            else:
+                return redirect(url_for('UpdateBid'))
+
+            
+
+
+        
+    
+        
 
             
 
