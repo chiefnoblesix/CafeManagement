@@ -9,12 +9,6 @@ class LogInBoundary:
     def render_login_page():
         return render_template('login.html')
     
-class LogoutB:
-    def logout():
-        return redirect('/')
-
-
-class SubmitLoginB:
     def SubmitLogin():
         # return redirect(url_for('StaffBids'))
         if request.method == 'POST':
@@ -37,6 +31,11 @@ class SubmitLoginB:
                 return render_template('login.html')
 
         return render_template('login.html')
+    
+class LogoutB:
+    def logout():
+        return redirect('/')
+
 
 class OwnerViewB:
     @staticmethod
@@ -175,12 +174,13 @@ class CreateBidB:
         work_slots = CreateBidC.get_from_entity(user_id)
         return render_template('staff_create_bids.html', work_slots=work_slots)
     
-class BidB:
     def place_bid(slot_id):
-        if BidC.place_the_bid(slot_id):
+        if CreateBidC.place_the_bid(slot_id):
             return redirect(url_for('StaffHome'))
         else:
             return redirect(url_for('create_bid'))
+    
+
         
 class UpdateBidB:
     def render_update_bid(update_id):

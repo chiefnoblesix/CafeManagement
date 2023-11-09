@@ -86,18 +86,10 @@ class BidsEntity:
             return False
         
     def create_bid(bid_id,shift_id, shift_type, shift_date, staff_user):
-        
-        try:
-            
-            # Attempt to create and commit the new bid
-            new_bid = Bids(id=bid_id, shift_id=shift_id, shift_type=shift_type, shift_date=shift_date, staff_user=staff_user)
-            db.session.add(new_bid)
-            db.session.commit()
-            return True
-        except Exception as e:
-            # Log the exception or print it for debugging
-            
-            return render_template('error.html', e=e)
+        new_bid = Bids(id=bid_id, shift_id=shift_id, shift_type=shift_type, shift_date=shift_date, staff_user=staff_user)
+        db.session.add(new_bid)
+        db.session.commit()
+        return True
 
 
     def get_a_bid(id):

@@ -17,13 +17,13 @@ def create_app():
         db.drop_all()
         db.create_all()
         app.add_url_rule('/', 'login',view_func=LogInBoundary.render_login_page, methods=["GET","POST"])
-        app.add_url_rule('/login',view_func=SubmitLoginB.SubmitLogin, methods=["POST", "GET"])
+        app.add_url_rule('/login',view_func=LogInBoundary.SubmitLogin, methods=["POST", "GET"])
         app.add_url_rule('/logout', 'logout', view_func=LogoutB.logout)
 
         app.add_url_rule('/StaffHome','StaffHome', view_func=StaffHomeViewB.render_staffhome)
         app.add_url_rule('/StaffHome/delete/<int:id>','delete_bid', view_func=DeleteBidB.delete_bid)
         app.add_url_rule('/CreateBid/<string:user_id>', 'create_bid', view_func=CreateBidB.render_create)
-        app.add_url_rule('/Bid/<int:slot_id>', 'bid', view_func=BidB.place_bid)
+        app.add_url_rule('/Bid/<int:slot_id>', 'bid', view_func=CreateBidB.place_bid)
         app.add_url_rule('/StaffHome/render_update/<int:update_id>', 'render_update_bid', view_func=UpdateBidB.render_update_bid)
         app.add_url_rule('/UpdateBid/<int:id>', 'update_bid', view_func=UpdateBidB.update_bid, methods=['POST'])
         app.add_url_rule('/StaffHome/Search', 'search_workslots', view_func=StaffSearchB.search)
@@ -107,8 +107,8 @@ def create_app():
 
         )
         
-        #db.session.add(new_workslot)
-        #db.session.add(new_workslot1)
+        db.session.add(new_workslot)
+        db.session.add(new_workslot1)
         db.session.add(new_role)
         db.session.add(new_role2)
         db.session.add(new_role3)

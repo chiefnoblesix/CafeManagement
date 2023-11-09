@@ -103,9 +103,7 @@ class CreateBidC:
                     workslots.remove(workslot)
 
         return workslots
-        
-        
-class BidC:
+    
     def place_the_bid(slot_id):
         global bidID
         workslot = WorkSlotEntity.get_workslot(slot_id)
@@ -120,6 +118,7 @@ class BidC:
             return BidsEntity.create_bid(bid_id,shift_id, shift_type, shift_date, staff_user )
         else:
             return redirect(url_for('create_bid'))
+        
         
 class UpdateBidC:
     def get_bid_updated(id):
