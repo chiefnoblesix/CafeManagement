@@ -22,12 +22,56 @@ class WorkSlotEntity:
             return True
         else:
             return False
+        
+    def get_workslot(id):
+        return WorkSlot.query.get(id)
 
 
 class BidsEntity:
     @staticmethod
-    def get_all_bids():
-        return Bids.query.filter_by(staff_user = 'John').all()
+    def get_all_bids(user_id):
+        return Bids.query.filter_by(staff_user = user_id).all()
+    
+    def search_bid(bid_id):
+        return Bids.query.filter_by(id=bid_id).all()
+    
+    def delete_bid(id):
+        bid =Bids.query.get(id)
+        if bid:
+            db.session.delete(bid)
+            db.session.commit()
+            return True
+        else:
+            return False
+        
+    def create_bid(bid_id,shift_id, shift_type, shift_date, staff_user):
+        
+        try:
+            
+            # Attempt to create and commit the new bid
+            new_bid = Bids(id=bid_id, shift_id=shift_id, shift_type=shift_type, shift_date=shift_date, staff_user=staff_user)
+            db.session.add(new_bid)
+            db.session.commit()
+            return True
+        except Exception as e:
+            # Log the exception or print it for debugging
+            
+            return render_template('error.html', e=e)
+
+
+    def get_a_bid(id):
+        return Bids.query.filter_by(id =id).all()
+    
+    def update_bid(id, shift_type, shift_date):
+        bid = Bids.query.get(id)
+        if bid:
+            bid.shift_type = shift_type
+            bid.shift_date = shift_date
+            db.session.commit()
+            return True
+        else:
+            return False
+        
 
 
 class StaffEntity:
@@ -60,3 +104,20 @@ class StaffEntity:
             return True
         else:
             return False
+        
+    def delete_acc(delete_id):
+        staff = Staff.query.get(delete_id)
+        if staff:
+            db.session.delete(staff)
+            db.session.commit()
+            return True
+        else:
+            return False
+        
+    def search(query):
+        staff = Staff.query.filter(
+            (Staff.username.ilike(f'%{query}%')) |  # Case-insensitive search by username
+            (Staff.job.ilike(f'%{query}%')) |      # Case-insensitive search by job
+            (Staff.userRole.ilike(f'%{query}%'))   # Case-insensitive search by userRole
+        ).all()
+        return staff
