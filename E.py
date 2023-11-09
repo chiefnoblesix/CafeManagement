@@ -8,11 +8,29 @@ class WorkSlotEntity:
     def get_available_work_slots():
         return WorkSlot.query.filter_by(status='Available').all()
     
-    def create_workslot(shift_type, date, status):
-        work_slot = WorkSlot(shiftType=shift_type, date=date, status=status)
+    def create_workslot(id, shift_type, date, status):
+        workslots = WorkSlotEntity.search_workslots(shift_type, status, date)
+        work_slot = WorkSlot(id=id,shiftType=shift_type, date=date, status=status)
+        for w in workslots:
+            if w.shiftType == work_slot.shiftType and w.date == work_slot.date:
+                return False
+            
         db.session.add(work_slot)
         db.session.commit()
+        return True
+            
+    def update_ws(id, shift_type, shift_date):
+        ws = WorkSlot.query.get(id)
+        if ws:
+            ws.shiftType = shift_type
+            ws.date = shift_date
+            db.session.commit()
+            return True
+        else:
+            return False 
         
+    def get_a_ws(id):
+        return WorkSlot.query.filter_by(id =id).all() 
 
     def delete_workslot(id):
 
