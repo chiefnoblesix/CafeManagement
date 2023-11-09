@@ -102,6 +102,9 @@ class StaffEntity:
     def view_all_staff():
         return Staff.query.all()
     
+    def view_staff(username):
+        return Staff.query.filter_by(username=username).first()
+    
     def get_login(username, password, role):
         user = Staff.query.filter_by(username=username, password=password, userRole=role).first()
         return user
@@ -144,3 +147,14 @@ class StaffEntity:
             (Staff.userRole.ilike(f'%{query}%'))   # Case-insensitive search by userRole
         ).all()
         return staff
+    
+    def update(username, new_job, new_avail):
+        staff = Staff.query.get(username)
+        if staff:
+            staff.job = new_job
+            staff.avail = new_avail
+
+            db.session.commit()
+            return True
+        else:
+            return False
