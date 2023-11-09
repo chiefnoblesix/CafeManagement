@@ -77,7 +77,7 @@ class AdminSearchB:
         query = request.args.get('query')
         results = AdminSearchC.search(query)
         if results is not None:
-            return render_template('search_results.html', query=query, results=results)
+            return render_template('search_results_sysAd.html', query=query, results=results)
         else:
             return redirect(url_for('SysAdminHome'))
     
@@ -168,7 +168,16 @@ class UpdateBidB:
             else:
                 return redirect(url_for('UpdateBid'))
 
-            
+class StaffSearchB:
+    def search():
+        query = request.args.get('query')
+        status = request.args.get('status')
+        date = request.args.get('date')
+        results = StaffSearchC.search(query, status, date)
+        if results is not None:
+            return render_template('search_results_staff.html', query=query, results=results)
+        else:
+            return redirect(url_for('StaffHome'))
 
 
         
