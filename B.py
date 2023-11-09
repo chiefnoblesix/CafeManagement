@@ -178,6 +178,21 @@ class StaffSearchB:
             return render_template('search_results_staff.html', query=query, results=results)
         else:
             return redirect(url_for('StaffHome'))
+        
+class StaffProfileB:
+    def view_profile():
+        username = session.get('user_id')
+        staff = StaffProfileC.view_profile(username)
+        return render_template('staff_update_profile.html', staff=staff)
+
+    def update():
+        username = session.get('user_id')
+        new_job = request.form['job']
+        new_avail = request.form['avail']
+        if StaffProfileC.update(username, new_job, new_avail):
+            return redirect(url_for('view_profile'))
+        else:
+            return redirect(url_for('StaffHome'))
 
 
         
