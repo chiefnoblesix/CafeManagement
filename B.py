@@ -38,16 +38,30 @@ class SubmitLoginB:
 
         return render_template('login.html')
 
-class WorkSlotBoundary:
+class OwnerViewB:
     @staticmethod
     def render_available_work_slots():
         work_slots = WorkSlotController.get_from_entity()
         return render_template('owner_home.html', work_slots=work_slots)
 
+class UpdateWSB:
+    def render_update(updatews_id):
+        ws = UpdateWSC.get_ws_updated(updatews_id)
+        return render_template('owner_update_ws.html', ws=ws)
+    
+    def update_ws(id):
+        
+        if request.method == 'POST':
+            # Handle form submission, update the bid, and save it to the database
+            shiftType = request.form['shift_type']
+            date = request.form['shift_date']
+            if UpdateWSC.update_ws(id, shiftType, date):
+                return redirect(url_for('owner_home'))
+            else:
+                return redirect(url_for('update_ws'))
 
 
-
-class CreateWSBoundary:
+class CreateWSB:
     @staticmethod
     def render_create_ws():
         return render_template('owner_create_workslot.html')
@@ -56,7 +70,10 @@ class CreateWSBoundary:
         shift_type = request.form.get('shift_type')
         date = request.form.get('date')
         status = 'Available'
-        return CreateWorkslotC.create_workslot(shift_type, date, status)
+        if CreateWorkslotC.create_workslot(shift_type, date, status):
+            return redirect(url_for('owner_home'))
+        else:
+            return redirect(url_for('render_create_ws'))
 
          
 class DeleteWorkslotBoundary:
@@ -66,6 +83,17 @@ class DeleteWorkslotBoundary:
         else:
             flash('Work Slot not found', 'error')
         return redirect(url_for('owner_home'))
+    
+class OwnerSearchB:
+    def search():
+        query = request.args.get('query')
+        status = request.args.get('status')
+        date = request.args.get('date')
+        results = OwnerSearchC.search(query, status, date)
+        if results is not None:
+            return render_template('search_results_owner.html', query=query, results=results)
+        else:
+            return redirect(url_for('owner_home'))
         
 class SysAdminViewB:
     def render_sys_admin():
@@ -94,6 +122,8 @@ class CreateAccountB:
         avail = request.form.get('avail')
         if CreateAccountC.create_newAcc(username, password, userRole, job, avail):
             return redirect(url_for('SysAdminHome'))
+        else:
+            return redirect(url_for('render_createAcc'))
         
 class DeleteAccB:
     def delete_acc(delete_id):
