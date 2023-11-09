@@ -27,11 +27,16 @@ def create_app():
         app.add_url_rule('/StaffHome/render_update/<int:update_id>', 'render_update_bid', view_func=UpdateBidB.render_update_bid)
         app.add_url_rule('/UpdateBid/<int:id>', 'update_bid', view_func=UpdateBidB.update_bid, methods=['POST'])
         app.add_url_rule('/StaffHome/Search', 'search_workslots', view_func=StaffSearchB.search)
+        app.add_url_rule('/ViewProfile', 'view_profile', view_func=StaffProfileB.view_profile)
+        app.add_url_rule('/StaffHome/UpdateProfile', 'update_profile', view_func=StaffProfileB.update, methods=['POST'])
 
-        app.add_url_rule('/owner_home','owner_home', view_func=WorkSlotBoundary.render_available_work_slots)
-        app.add_url_rule('/render_create_ws','render_create_ws', view_func=CreateWSBoundary.render_create_ws)
-        app.add_url_rule('/render_create_ws/create_ws','create_ws', view_func=CreateWSBoundary.create_workslot, methods=['POST'])
+        app.add_url_rule('/owner_home','owner_home', view_func=OwnerViewB.render_available_work_slots)
+        app.add_url_rule('/render_create_ws','render_create_ws', view_func=CreateWSB.render_create_ws)
+        app.add_url_rule('/render_create_ws/create_ws','create_ws', view_func=CreateWSB.create_workslot, methods=['POST'])
         app.add_url_rule('/owner_home/delete/<int:id>','delete_work_slot', view_func=DeleteWorkslotBoundary.delete_workslot)
+        app.add_url_rule('/owner_home/render_updateWS/<int:updatews_id>', 'render_update_ws', view_func=UpdateWSB.render_update)
+        app.add_url_rule('/UpdateWS/<int:id>', 'update_ws', view_func=UpdateWSB.update_ws, methods=['POST'])
+        app.add_url_rule('/owner_home/Search', 'owner_search_workslots', view_func=OwnerSearchB.search)
 
         app.add_url_rule('/SysAdminHome', 'SysAdminHome', view_func=SysAdminViewB.render_sys_admin)
         app.add_url_rule('/render_createAcc', 'render_createAcc', view_func=CreateAccountB.render_create_account)
@@ -102,8 +107,8 @@ def create_app():
 
         )
         
-        db.session.add(new_workslot)
-        db.session.add(new_workslot1)
+        #db.session.add(new_workslot)
+        #db.session.add(new_workslot1)
         db.session.add(new_role)
         db.session.add(new_role2)
         db.session.add(new_role3)
