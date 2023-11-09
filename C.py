@@ -67,6 +67,8 @@ class DeleteAccC:
 class AdminSearchC:
     def search(query):
         return StaffEntity.search(query)
+    
+
             
 
 
@@ -118,4 +120,13 @@ class StaffSearchC:
             
         
 
+class StaffProfileC:
+    def view_profile(username):
+        return StaffEntity.view_staff(username)
 
+
+    def update(username, new_job, new_avail):
+        if StaffEntity.update(username, new_job, new_avail):
+            return True
+        else:
+            return False
