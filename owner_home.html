@@ -18,6 +18,7 @@
 <div class="container-fluid p-5 bg-primary text-white text-center">
     <h1>Cafe Owner Page</h1>
     <p>Cafe Cai Peng</p>
+    <div style="text-align:right;"><a href="{{ url_for('logout') }}" class="link-dark">Logout</a></div>
 </div>
 
 <div class="container mt-3" align="left">
@@ -45,7 +46,11 @@
                 <td scope="row">{{ work_slot.shiftType }}</td>
                 <td>{{ work_slot.date }}</td>
                 <td>{{ work_slot.status }}</td>
-                
+                <td>
+                    <a class="btn btn-primary" href="{{ url_for('render_update_ws', updatews_id=work_slot.id) }}">
+                        Update
+                    </a>
+                </td>
                 
                 <td>
                     <a class="btn btn-danger" href="{{ url_for('delete_work_slot', id=work_slot.id) }}">
@@ -56,6 +61,25 @@
             {% endfor %}
         </tbody>
     </table>
+    <form action="{{ url_for('owner_search_workslots') }}" method="GET">
+        <div class="form-group">
+            <label for="query">Search Query:</label>
+            <input type="text" name="query" id="query">
+        </div>
+        <div class="form-group">
+            <label for="status">Status:</label>
+            <select name="status" id="status">
+                <option value="">Any</option>
+                <option value="Available">Available</option>
+                <!-- Add more status options as needed -->
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="date">Date:</label>
+            <input type="date" name="date" id="date">
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
 </div>
 
 <!-- The Create Room Modal -->
