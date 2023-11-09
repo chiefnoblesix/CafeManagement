@@ -61,7 +61,10 @@
 <div id="new_account_header">
     <h1>All Accounts</h1>
 </div>
-
+<form action="{{ url_for('search_results') }}" method="GET">
+    <input type="text" name="query" placeholder="Search...">
+    <button type="submit">Search</button>
+</form>
 
 
 <div id="new_account_container">
@@ -78,6 +81,7 @@
                 <th>Role</th>
                 <th>Availability</th>
                 <th>Update/Edit</th>
+                <th>Delete</th>
             </tr>
         </thead>
     
@@ -101,6 +105,7 @@
                     {{ staff.avail }}
                 </td>
                 <td><a href="{{ url_for('render_editAcc', id=staff.username) }}">Update</a></td>
+                <td><a href="{{ url_for('delete_acc', delete_id=staff.username) }}">Delete</a></td>
                 
                 
             </tr>
