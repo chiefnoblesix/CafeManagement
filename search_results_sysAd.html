@@ -1,0 +1,104 @@
+{% extends 'base.html' %} 
+
+{% block head %}
+
+<title>System Admin Home</title>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/homepage.css')}}">
+
+{% endblock %}
+
+{% block body %}
+<style> 
+    #new_account_header {
+        padding:10px;
+        margin-top:50px;
+        margin-left: 465px;
+        width: 350px;
+        height: 70px;
+        background-color: hsla(19, 87%, 9%, 0.936);
+        color:blanchedalmond;
+        text-align: center;
+    }
+
+    #new_account_container {
+        padding-left: 50px;
+        padding-top: 20px;
+        margin: 0 auto;
+        width: 350px;
+        height: 400px;
+        background-color: blanchedalmond;
+        color: hsla(19, 87%, 9%, 0.936);
+    }
+
+    #new_account_container label{
+        color:hsla(19, 87%, 9%, 0.936);
+        font-weight: bold;
+        font-size:17px;
+    }
+
+    #new_account_container input{
+        color:hsla(19, 87%, 9%, 0.936);
+        font-weight: bold;
+        background-color: burlywood;
+    }
+
+    #new_account_container select{
+        color:hsla(19, 87%, 9%, 0.936);
+        font-weight: bold;
+        background-color: burlywood;
+    }
+</style>
+
+<nav>
+    <div class = "div left-nav">
+        <h2>CaiPeng</h2>
+    </div>
+    <div class = "right-nav">
+        <img src = "{{ url_for('static', filename='styles/icon.jpg')}}" class = "icon">
+    </div>
+</nav>
+
+<form action="{{ url_for('search_results') }}" method="GET">
+    <input type="text" name="query" placeholder="Search...">
+    <button type="submit">Search</button>
+</form>
+
+
+<div id="new_account_container">
+    &nbsp;<br />
+    <h1>Search Results for "{{ query }}"</h1>
+    <table >
+        <thead>
+            <tr>
+                <th>Results</th>
+            </tr>
+        </thead>
+    
+        <tbody>
+            {% for result in results %}
+                <tr>
+                    {% for attribute, value in result.__dict__.items() %}
+                        {% if not attribute.startswith('_') %}
+                            <td>{{ attribute }}</td>
+                            <td>{{ value }}</td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="container mt-3" align="left">
+    
+    <a  href="{{ url_for('logout') }}">
+        Logout
+    </a>
+    <a  href="{{ url_for('SysAdminHome') }}">
+        Back
+    </a>
+    
+    
+</div>
+
+
+{% endblock %} 
