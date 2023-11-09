@@ -3,6 +3,7 @@ from CafeDB import *
 from E import *
 
 bidID = 1
+wsID = 1
 #Controller Classes
 
 class LogInController:
@@ -25,17 +26,31 @@ class ViewC:
     
 class CreateWorkslotC:
     def create_workslot(shift_type, date, status):
-
-        return WorkSlotEntity.create_workslot(shift_type, date, status)
+        global wsID
+        id = wsID
+        
+        if WorkSlotEntity.create_workslot(id, shift_type, date, status):
+            wsID+=1
+            return True
+        else: 
+            return False
     
-
+class UpdateWSC:
+    def get_ws_updated(id):
+        ws = WorkSlotEntity.get_a_ws(id)
+        return ws
+    
+    def update_ws(id, shiftType, date):
+        return WorkSlotEntity.update_ws(id, shiftType, date)
     
 class DeleteWorkslotC:
     def delete_workslot(id):
         
         return WorkSlotEntity.delete_workslot(id)
         
-
+class OwnerSearchC:
+    def search(query, status, date):
+        return WorkSlotEntity.search_workslots(query, status, date)
 
 class SysAdminViewC:
     def view_all_staff():
