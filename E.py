@@ -1,5 +1,7 @@
 from flask import render_template, request, flash, session, redirect, url_for
 from CafeDB import *
+from sqlalchemy import or_
+from datetime import datetime
 
 class WorkSlotEntity:
     @staticmethod
@@ -10,6 +12,7 @@ class WorkSlotEntity:
         work_slot = WorkSlot(shiftType=shift_type, date=date, status=status)
         db.session.add(work_slot)
         db.session.commit()
+        
 
     def delete_workslot(id):
 
@@ -25,6 +28,26 @@ class WorkSlotEntity:
         
     def get_workslot(id):
         return WorkSlot.query.get(id)
+    
+    def search_workslots(query, status=None, date=None):
+        workslots = WorkSlot.query
+
+        if query:
+            # Define your search criteria and apply case-insensitive search
+            criteria = [WorkSlot.shiftType.ilike(f'%{query}%')]
+            
+            if status:
+                criteria.append(WorkSlot.status == status)
+            
+            if date:
+                date_obj = datetime.strptime(date, '%Y-%m-%d')
+                criteria.append(WorkSlot.date == date_obj)
+
+            # Combine criteria using OR logic
+            workslots = workslots.filter(or_(*criteria))
+
+        return workslots.all()
+
 
 
 class BidsEntity:
