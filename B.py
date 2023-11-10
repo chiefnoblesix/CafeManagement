@@ -34,7 +34,7 @@ class LogInBoundary:
     
 class LogoutB:
     def logout():
-        return redirect('/')
+        return render_template('login.html')
 
 
 class OwnerViewB:
