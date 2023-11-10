@@ -1,0 +1,67 @@
+<table>
+    <tr>
+        <th>Workslots</th>
+        <th>Date</th>
+        <th>Shift Type</th>
+        <th>Status</th>
+        <th>Name</th>
+        <th class="permissions-column">Permissions</th>
+    </tr>
+    {% for day, data in workslots.items() %}
+        {% for shift in data['shifts'] %}
+            <tr>
+                {% if loop.first %}
+                    <td rowspan="{{ data['shifts']|length }}">{{ day }}</td>
+                    <td rowspan="{{ data['shifts']|length }}">{{ data['date'] }}</td>
+                {% endif %}
+                <td>{{ shift['shift_type'] }}</td>
+                <td id="status-{{ day }}-{{ loop.index0 }}">
+                    {{ shift['status'] }}
+                    <div>
+                        {% if shift['status'] == 'Incomplete' %}
+                            {% if not shift['alert'] %}
+                                <form method="post" action="/alert">
+                                    <input type="hidden" name="day" value="{{ day }}">
+                                    <input type="hidden" name="shiftIndex" value="{{ loop.index0 }}">
+                                    <button class="alert-button" type="submit">Alert</button>
+                                </form>
+                            {% else %}
+                                <span style="color: red;">"Announcement to All Staff"</span></br>
+                                <span style="color: red;">[ Please bid for this Workslot! ]</span>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </td>
+                <td>{{ shift['name'] }}</td>
+                <td id="permissions-{{ day }}-{{ loop.index0 }}">
+                    {% if shift['status'] == 'Awaiting Approval' %}
+                        <label>
+                            <input type="radio" name="permission-{{ day }}-{{ loop.index0 }}" value="approve"> Approve
+                        </label>
+                        <label>
+                            <input type="radio" name="permission-{{ day }}-{{ loop.index0 }}" value="reject"> Reject
+                        </label>
+                        <input type="hidden" name="shift_status-{{ day }}-{{ loop.index0 }}" value="{{ shift['status'] }}">
+                    {% endif %}
+
+                    {% if shift['status'] == 'Complete (A)' %}
+                        <span style="color: green; font-weight: bold;">Approved</span>
+                        <form method="post" action="/reject_approveP">
+                            <button type="submit" name="reject-{{ day }}-{{ loop.index0 }}" class="reject-button">Reject Approved</button>
+                        </form>
+                    {% elif shift['status'] == 'Complete (R)' %}
+                        <span style="color: red; font-weight: bold;">Rejected</span>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    {% endfor %}
+    <tr>
+        <td colspan="5"></td>
+        <td class="permissions-column" colspan="2">
+            <div class="submit-button-container">
+                <button type="submit" id="submit-button">Update</button>
+            </div>
+        </td>
+    </tr>
+</table>
