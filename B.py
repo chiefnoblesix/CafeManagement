@@ -5,7 +5,7 @@ from C import *
 
 #Boundary Classes
 class LogInBoundary:
-    @staticmethod
+    
     def render_login_page():
         return render_template('login.html')
     
@@ -38,7 +38,7 @@ class LogoutB:
 
 
 class OwnerViewB:
-    @staticmethod
+    
     def render_available_work_slots():
         work_slots = WorkSlotController.get_from_entity()
         return render_template('owner_home.html', work_slots=work_slots)
@@ -61,7 +61,7 @@ class UpdateWSB:
 
 
 class CreateWSB:
-    @staticmethod
+    
     def render_create_ws():
         return render_template('owner_create_workslot.html')
     
