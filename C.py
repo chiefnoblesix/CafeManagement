@@ -14,13 +14,13 @@ class LogInController:
             return False
 
 class WorkSlotController:
-    @staticmethod
+    
     def get_from_entity():
         return WorkSlotEntity.get_available_work_slots()
 
 
 class ViewC:
-    @staticmethod
+    
     def get_from_entity_bids(user_id):
         return BidsEntity.get_all_bids(user_id)
     
