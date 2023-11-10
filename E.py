@@ -4,7 +4,7 @@ from sqlalchemy import or_
 from datetime import datetime
 
 class WorkSlotEntity:
-    @staticmethod
+    
     def get_available_work_slots():
         return WorkSlot.query.filter_by(status='Available').all()
     
@@ -69,7 +69,7 @@ class WorkSlotEntity:
 
 
 class BidsEntity:
-    @staticmethod
+    
     def get_all_bids(user_id):
         return Bids.query.filter_by(staff_user = user_id).all()
     
