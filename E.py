@@ -6,7 +6,7 @@ from datetime import datetime
 class WorkSlotEntity:
     
     def get_available_work_slots():
-        return WorkSlot.query.filter_by(status='Available').all()
+        return WorkSlot.query.all()
     
     def create_workslot(id, shift_type, date, status):
         workslots = WorkSlotEntity.search_workslots(shift_type, status, date)
@@ -47,6 +47,9 @@ class WorkSlotEntity:
     def get_workslot(id):
         return WorkSlot.query.get(id)
     
+    def get_all_ws():
+        return WorkSlot.query.all()
+    
     def search_workslots(query, status=None, date=None):
         workslots = WorkSlot.query
 
@@ -65,13 +68,54 @@ class WorkSlotEntity:
             workslots = workslots.filter(or_(*criteria))
 
         return workslots.all()
+    
+    def update_approve_bid(id):
+        # Assuming day and shiftType are the values you want to filter on
+        workslot_to_update = WorkSlot.query.filter_by(id=id).first()
+
+        # Update the status to 'Complete (A)' if the workslot is found
+        if workslot_to_update:
+            workslot_to_update.status = 'Complete (A)'
+            db.session.commit()
+            return True  # Indicate success
+        else:
+            return False  # Indicate that the workslot was not found
+        
+    def update_reject_bid(id):
+        # Assuming day and shiftType are the values you want to filter on
+        workslot_to_update = WorkSlot.query.filter_by(id=id).first()
+
+        # Update the status to 'Complete (A)' if the workslot is found
+        if workslot_to_update:
+            workslot_to_update.status = 'Complete (R)'
+            db.session.commit()
+            return True  # Indicate success
+        else:
+            return False  # Indicate that the workslot was not found
+
+    def search(query):
+        # Query workslots based on the given parameters
+        work_slots_query = WorkSlot.query.filter(
+            (WorkSlot.date.ilike(f'%{query}%')) |
+            (WorkSlot.shiftType.ilike(f'%{query}%'))
+        )
+        if work_slots_query is not None:
+            return work_slots_query
+        else:
+            return None
+    
+    def compare_id(workslot_ids_with_bids):
+        return WorkSlot.id.in_(workslot_ids_with_bids)
 
 
 
 class BidsEntity:
-    
+   
     def get_all_bids(user_id):
         return Bids.query.filter_by(staff_user = user_id).all()
+    
+    def get_all_bids_ws():
+        return Bids.query.all()
     
     def search_bid(bid_id):
         return Bids.query.filter_by(id=bid_id).all()
@@ -104,6 +148,38 @@ class BidsEntity:
             return True
         else:
             return False
+        
+    def update_approve_bid(id, staff):
+        # Assuming day, shiftType, and staff are the values you want to filter on
+        bids_to_update = Bids.query.filter_by(shift_id=id, staff_user=staff).all()
+
+        # Update the approval to True for each matched record
+        for bid in bids_to_update:
+            bid.approval = True
+
+        # Commit the changes to the database
+        db.session.commit()
+
+    def update_reject_bid(id, staff):
+        # Assuming day, shiftType, and staff are the values you want to filter on
+        bids_to_update = Bids.query.filter_by(shift_id=id, staff_user=staff).all()
+
+        # Update the approval to True for each matched record
+        for bid in bids_to_update:
+            bid.approval = False
+
+        # Commit the changes to the database
+        db.session.commit()
+
+    def search(query):
+        bids_query = Bids.query.filter(
+            (Bids.shift_date.ilike(f'%{query}%')) |
+            (Bids.shift_type.ilike(f'%{query}%')) |
+            (Bids.staff_user.ilike(f'%{query}%'))
+        )
+        return bids_query
+
+
         
 
 

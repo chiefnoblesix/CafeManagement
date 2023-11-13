@@ -26,6 +26,8 @@ class LogInBoundary:
                     return redirect(url_for('StaffHome'))  
                 if role == 'SystemAdmin':
                     return redirect(url_for('SysAdminHome'))
+                if role == 'CafeManager':
+                    return redirect(url_for('manager_home'))
             else:
                 flash('Invalid username or password', 'error')
                 return render_template('login.html')
@@ -223,9 +225,51 @@ class StaffProfileB:
             return redirect(url_for('view_profile'))
         else:
             return redirect(url_for('StaffHome'))
-
-
         
+class ManagerViewB:
+    def render_home():
+        workslots = ManagerViewC.get_all_ws()
+        return render_template('manager_home.html' , workslots=workslots)
+    
+class ManagerApproveB:
+    def approve_bid(shift_id, staff):
+        id = shift_id
+        staff = staff
+        if ManagerApproveC.update_approve(id, staff):
+            return redirect(url_for('manager_home'))
+        else:
+            return redirect(url_for('manager_home'))
+            
+    
+class ManagerRejectB:
+    def reject_bid(shift_id, staff):
+        id = shift_id
+        staff = staff
+        if ManagerRejectC.reject_approve(id, staff):
+            return redirect(url_for('manager_home'))
+        else:
+            return redirect(url_for('manager_home'))
+            
+class ManagerRAB:
+    def reject_approved(shift_toReject, staff):
+        id = shift_toReject
+        staff = staff
+        if ManagerRejectC.reject_approve(id, staff):
+            return redirect(url_for('manager_home'))
+        else:
+            return redirect(url_for('manager_home'))
+
+
+
+class ManagerSearchB:
+    def display_search():
+        query = request.form.get('search_query')
+        results = ManagerSearchC.search(query)
+        if results is not None:
+            
+            return render_template('manager_search_results.html', results=results)
+        else:
+            return redirect(url_for('manager_home'))
     
         
 

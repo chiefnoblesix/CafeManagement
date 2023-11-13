@@ -45,18 +45,33 @@ def create_app():
         app.add_url_rule('/render_editAcc/editAcc/<string:id>', 'editAcc', view_func=EditAccountB.edit_accB, methods=["GET","POST"])
         app.add_url_rule('/SysAdminHome/Delete/<string:delete_id>', 'delete_acc', view_func=DeleteAccB.delete_acc)
         app.add_url_rule('/SysAdminHome/Search', 'search_results', view_func=AdminSearchB.search)
+
+        app.add_url_rule('/ManagerHome','manager_home', view_func=ManagerViewB.render_home, methods=['GET'])
+        app.add_url_rule('/ManagerHome/ApproveShift/<int:shift_id>/<string:staff>', 'approve_shift',view_func=ManagerApproveB.approve_bid, methods=['POST'])
+        app.add_url_rule('/ManagerHome/RejectShift/<int:shift_id>/<string:staff>', 'reject_shift',view_func=ManagerRejectB.reject_bid, methods=['POST'])
+        app.add_url_rule('/ManagerHome/RejectApprove/<int:shift_toReject>/<string:staff> ','reject_approve', view_func=ManagerRAB.reject_approved, methods=['POST'])
+        app.add_url_rule('/ManagerHome/SearchManager', 'search_workslots_manager', view_func=ManagerSearchB.display_search, methods=['POST'])
+
         new_workslot = WorkSlot(
             id = 1,
             shiftType = 'AFTERNOON',
             date = '01-01-2000',
-            status = 'Available',
+            status = 'Awaiting Approval',
 
         )
         new_workslot1 = WorkSlot(
             id = 2,
             shiftType = 'AFTERNOON',
-            date = '02-01-2000',
-            status = 'Available',
+            date = '2000-01-02',
+            status = 'Incomplete',
+
+        )
+
+        new_workslot2 = WorkSlot(
+            id = 3,
+            shiftType = 'MORNING',
+            date = '03-01-2000',
+            status = 'Incomplete',
 
         )
 
@@ -97,18 +112,37 @@ def create_app():
             userRole = new_role4.role,
         )
 
+        new_manager = Staff(
+            username = "Ma",
+            password = "Ma",
+            job = "Manager",
+            avail = "FT",
+            userRole = new_role3.role,
+        )
+
         new_bid = Bids(
             id = 1,
             shift_id = new_workslot.id,
             shift_type = new_workslot.shiftType,
             shift_date = new_workslot.date,
             staff_user = new_user.username,
-            approval = True,
+            approval = False
+            
+
+        )
+        new_bid1 = Bids(
+            id = 2,
+            shift_id = new_workslot1.id,
+            shift_type = new_workslot.shiftType,
+            shift_date = new_workslot.date,
+            staff_user = new_user.username,
+            approval = False,
 
         )
         
-        db.session.add(new_workslot)
+        # db.session.add(new_workslot)
         db.session.add(new_workslot1)
+        # db.session.add(new_workslot2)
         db.session.add(new_role)
         db.session.add(new_role2)
         db.session.add(new_role3)
@@ -116,7 +150,10 @@ def create_app():
         db.session.add(new_user)
         db.session.add(new_user2)
         #db.session.add(new_bid)
+        #db.session.add(new_bid1)
         db.session.add(new_admin)
+        db.session.add(new_manager)
+
         
         db.session.commit()
     return app
