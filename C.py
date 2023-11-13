@@ -154,30 +154,33 @@ class ManagerViewC:
         workslots = {}
         all_workslots = WorkSlotEntity.get_all_ws()
         all_bids = BidsEntity.get_all_bids_ws()
-        
-        
 
         for workslot in all_workslots:
             status = workslot.status
+            bid_count = 0  # Counter to keep track of the number of bids for the current workslot
+
             for bids in all_bids:
                 if bids.shift_id == workslot.id:
-                    if  bids.approval != True and bids.approval != False :
-                        status = 'Awaiting Approval'
+                    bid_status = 'Awaiting Approval'
+
+                    if bids.approval != True and bids.approval != False:
+                        bid_status = 'Awaiting Approval'
                     elif bids.approval == False:
-                        status = 'Incomplete (R)'
+                        bid_status = 'Incomplete (R)'
+                        status = 'Incomplete'
                     else:
+                        bid_status = 'Complete (A)'
                         status = 'Complete (A)'
-                     
-                        
+
                     staff = bids.staff_user
                     shiftdate = workslot.date
                     day = datetime.strptime(shiftdate, "%Y-%m-%d").strftime('%A')  # Get the full day
                     shift_data = {
                         'shift_id': workslot.id,
                         'shift-type': workslot.shiftType,
-                        'status' : status,
-                        'name': staff,  
-                        'alert': workslot.status == 'Available',  # Alert is True when status is 'Available'
+                        'status': bid_status,
+                        'name': staff,
+                        'alert': workslot.status == 'Complete (A)' or workslot.status == 'Awaiting Approval',  # Alert is True when status is 'Available'
                     }
 
                     if day not in workslots:
@@ -185,22 +188,32 @@ class ManagerViewC:
 
                     workslots[day]['shifts'].append(shift_data)
 
-                else:
-                    shiftdate = workslot.date
-                    day = datetime.strptime(shiftdate, "%Y-%m-%d").strftime('%A')  # Get the full day
-                    shift_data = {
-                        'shift_id': workslot.id,
-                        'shift-type': workslot.shiftType,
-                        'status': workslot.status,
-                        'name': '',  
-                        'alert': workslot.status == 'Available',  # Alert is True when status is 'Available'
-                    }
+                    # Increment the bid count
+                    bid_count += 1
 
-                    if day not in workslots:
-                        workslots[day] = {'date': workslot.date, 'shifts': []}
+                    # Break out of the loop if the bid count reaches 5
+            if bid_count <= 5:
+                status = 'Incomplete'
+            
+                
 
-                    workslots[day]['shifts'].append(shift_data)
+            shiftdate = workslot.date
+            day = datetime.strptime(shiftdate, "%Y-%m-%d").strftime('%A')  # Get the full day
+            shift_data = {
+                'shift_id': workslot.id,
+                'shift-type': workslot.shiftType,
+                'status': status,
+                'name': '',
+                'alert': workslot.status == 'Complete (A)' or workslot.status == 'Awaiting Approval',  # Alert is True when status is 'Available'
+            }
+
+            if day not in workslots:
+                workslots[day] = {'date': workslot.date, 'shifts': []}
+
+            workslots[day]['shifts'].append(shift_data)
+
         return workslots
+
     
     
 class ManagerApproveC:
@@ -218,86 +231,173 @@ class ManagerRejectC:
 class ManagerSearchC:
     def search(query):
         workslots = {}
-        workslot_query = WorkSlotEntity.search(query)
-        bids_query = BidsEntity.search(query)
-        bids_staff_query = BidsEntity.get_all_bids(query)
-        # workslot_ids_with_bids = [bid.shift_id for bid in bids_query]
-        # compare_bids_in_ws = WorkSlotEntity.compare_id(workslot_ids_with_bids)
-        # work_slots_ = workslot_query.filter(compare_bids_in_ws).all()
+        all_workslots = WorkSlotEntity.get_all_ws()
+        all_bids = BidsEntity.get_all_bids_ws()
+        
+        
+
+        for workslot in all_workslots:
+            status = workslot.status
+            for bids in all_bids:
+                bid_status = 'Awaiting Approval'
+                if bids.shift_id == workslot.id:
+                    if  bids.approval != True and bids.approval != False :
+                        bid_status = 'Awaiting Approval'
+                    elif bids.approval == False:
+                        bid_status = 'Incomplete (R)'
+                    else:
+                        bid_status = 'Complete (A)'
+                     
+                        
+                    staff = bids.staff_user
+                    shiftdate = workslot.date
+                    day = datetime.strptime(shiftdate, "%Y-%m-%d").strftime('%A')  # Get the full day
+                    shift_data = {
+                        'shift_id': workslot.id,
+                        'shift-type': workslot.shiftType,
+                        'status' : bid_status,
+                        'name': staff,  
+                        'alert': workslot.status == 'Complete (A)' or workslot.status == 'Awaiting Approval',  # Alert is True when status is 'Available'
+                    }
+
+                    if day not in workslots:
+                        workslots[day] = {'date': workslot.date, 'shifts': []}
+
+                    workslots[day]['shifts'].append(shift_data)
+
+            shiftdate = workslot.date
+            day = datetime.strptime(shiftdate, "%Y-%m-%d").strftime('%A')  # Get the full day
+            shift_data = {
+                'shift_id': workslot.id,
+                'shift-type': workslot.shiftType,
+                'status': workslot.status,
+                'name': '',  
+                'alert': workslot.status == 'Complete (A)' or workslot.status == 'Awaiting Approval',  # Alert is True when status is 'Available'
+            }
+
+            if day not in workslots:
+                workslots[day] = {'date': workslot.date, 'shifts': []}
+
+            workslots[day]['shifts'].append(shift_data)
+                    
+        search_query = request.form.get('search_query', '').strip().capitalize()
+        filtered_workslots = {} 
+
+        if search_query:
+            for day, data in workslots.items():
+                # Check if search_query matches day
+                if (
+                    search_query.lower() in day.lower() or
+                    search_query in data['date']
+                ):
+                    filtered_workslots[day] = data
+                    continue
+
+                # Check if search_query matches any name, status, or permission in shifts
+                filtered_shifts = []
+                for shift in data['shifts']:
+                    if (
+                        search_query in shift['name'].capitalize() or
+                        search_query.lower() in shift['status'].lower() or
+                        search_query in shift.get('permission', '').lower() or
+                        search_query in shift['shift-type'].lower()
+                    ):
+                        filtered_shifts.append(shift)
+                        
+                    elif search_query == 'Complete (A)' and shift['status'].lower() == 'Complete (A)':
+                        filtered_shifts.append(shift)
+
+                # If any shifts match the search_query, add them to the filtered_workslots
+                if filtered_shifts:
+                    filtered_workslots[day] = {'date': data['date'], 'shifts': filtered_shifts}
+
+        return filtered_workslots
+
+
+
+
+
+
+        # workslot_query = WorkSlotEntity.search(query)
+        # bids_query = BidsEntity.search(query)
+        # bids_staff_query = BidsEntity.get_all_bids(query)
+        # # workslot_ids_with_bids = [bid.shift_id for bid in bids_query]
+        # # compare_bids_in_ws = WorkSlotEntity.compare_id(workslot_ids_with_bids)
+        # # work_slots_ = workslot_query.filter(compare_bids_in_ws).all()
 
         
-        if workslot_query is None:
+        # if workslot_query is None:
 
-            for bids in bids_staff_query:
-                status = 'Available'
-                if  bids.approval != True and bids.approval != False :
-                    status = 'Awaiting Approval'
-                elif bids.approval == False:
-                    status = 'Complete (R)'
-                else:
-                    status = 'Complete (A)'
+        #     for bids in bids_staff_query:
+        #         status = 'Available'
+        #         if  bids.approval != True and bids.approval != False :
+        #             status = 'Awaiting Approval'
+        #         elif bids.approval == False:
+        #             status = 'Complete (R)'
+        #         else:
+        #             status = 'Complete (A)'
                 
                     
-                staff = bids.staff_user
-                shiftdate = bids.shift_date
-                day = datetime.strptime(shiftdate, "%Y-%m-%d").strftime('%A')  # Get the full day
-                shift_data = {
-                    'shift_id': bids.shift_id,
-                    'shift-type': bids.shift_type,
-                    'status' : status,
-                    'name': staff,  
-                    'alert': status == 'Available',  # Alert is True when status is 'Available'
-                }
+        #         staff = bids.staff_user
+        #         shiftdate = bids.shift_date
+        #         day = datetime.strptime(shiftdate, "%Y-%m-%d").strftime('%A')  # Get the full day
+        #         shift_data = {
+        #             'shift_id': bids.shift_id,
+        #             'shift-type': bids.shift_type,
+        #             'status' : status,
+        #             'name': staff,  
+        #             'alert': status == 'Available',  # Alert is True when status is 'Available'
+        #         }
 
-                if day not in workslots:
-                    workslots[day] = {'date': bids.shift_date, 'shifts': []}
+        #         if day not in workslots:
+        #             workslots[day] = {'date': bids.shift_date, 'shifts': []}
 
-                workslots[day]['shifts'].append(shift_data)
+        #         workslots[day]['shifts'].append(shift_data)
                     
 
-        else:
-            for workslot in workslot_query:
-                status = workslot.status
-                for bids in bids_query:
-                    if bids.shift_id == workslot.id:
-                        if  bids.approval != True and bids.approval != False :
-                            status = 'Awaiting Approval'
-                        elif bids.approval == False:
-                            status = 'Complete (R)'
-                        else:
-                            status = 'Complete (A)'
+        # else:
+        #     for workslot in workslot_query:
+        #         status = workslot.status
+        #         for bids in bids_query:
+        #             if bids.shift_id == workslot.id:
+        #                 if  bids.approval != True and bids.approval != False :
+        #                     status = 'Awaiting Approval'
+        #                 elif bids.approval == False:
+        #                     status = 'Complete (R)'
+        #                 else:
+        #                     status = 'Complete (A)'
                         
                             
-                        staff = bids.staff_user
-                        shiftdate = workslot.date
-                        day = datetime.strptime(shiftdate, "%Y-%m-%d").strftime('%A')  # Get the full day
-                        shift_data = {
-                            'shift_id': workslot.id,
-                            'shift-type': workslot.shiftType,
-                            'status' : status,
-                            'name': staff,  
-                            'alert': workslot.status == 'Available',  # Alert is True when status is 'Available'
-                        }
+        #                 staff = bids.staff_user
+        #                 shiftdate = workslot.date
+        #                 day = datetime.strptime(shiftdate, "%Y-%m-%d").strftime('%A')  # Get the full day
+        #                 shift_data = {
+        #                     'shift_id': workslot.id,
+        #                     'shift-type': workslot.shiftType,
+        #                     'status' : status,
+        #                     'name': staff,  
+        #                     'alert': workslot.status == 'Available',  # Alert is True when status is 'Available'
+        #                 }
 
-                        if day not in workslots:
-                            workslots[day] = {'date': workslot.date, 'shifts': []}
+        #                 if day not in workslots:
+        #                     workslots[day] = {'date': workslot.date, 'shifts': []}
 
-                        workslots[day]['shifts'].append(shift_data)
+        #                 workslots[day]['shifts'].append(shift_data)
 
-                    else:
-                        shiftdate = workslot.date
-                        day = datetime.strptime(shiftdate, "%Y-%m-%d").strftime('%A')  # Get the full day
-                        shift_data = {
-                            'shift_id': workslot.id,
-                            'shift-type': workslot.shiftType,
-                            'status': workslot.status,
-                            'name': '',  
-                            'alert': workslot.status == 'Available',  # Alert is True when status is 'Available'
-                        }
+        #             else:
+        #                 shiftdate = workslot.date
+        #                 day = datetime.strptime(shiftdate, "%Y-%m-%d").strftime('%A')  # Get the full day
+        #                 shift_data = {
+        #                     'shift_id': workslot.id,
+        #                     'shift-type': workslot.shiftType,
+        #                     'status': workslot.status,
+        #                     'name': '',  
+        #                     'alert': workslot.status == 'Available',  # Alert is True when status is 'Available'
+        #                 }
 
-                        if day not in workslots:
-                            workslots[day] = {'date': workslot.date, 'shifts': []}
+        #                 if day not in workslots:
+        #                     workslots[day] = {'date': workslot.date, 'shifts': []}
 
-                        workslots[day]['shifts'].append(shift_data)
-        return workslots
+        #                 workslots[day]['shifts'].append(shift_data)
+        # return workslots
 

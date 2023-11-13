@@ -87,7 +87,7 @@ class WorkSlotEntity:
 
         # Update the status to 'Complete (A)' if the workslot is found
         if workslot_to_update:
-            workslot_to_update.status = 'Complete (R)'
+            workslot_to_update.status = 'Incomplete'
             db.session.commit()
             return True  # Indicate success
         else:

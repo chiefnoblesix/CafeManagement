@@ -70,7 +70,7 @@ class CreateWSB:
     def create_workslot():
         shift_type = request.form.get('shift_type')
         date = request.form.get('date')
-        status = 'Available'
+        status = 'Incomplete'
         if CreateWorkslotC.create_workslot(shift_type, date, status):
             return redirect(url_for('owner_home'))
         else:
