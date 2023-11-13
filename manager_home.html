@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Full Week Schedule</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+        
+        h1 {
+            background-color: #808080;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+        }
+        
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #808080;
+            color: #fff;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        tr:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .alert-button, .search-button, .reject-button, #submit-button {
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 2px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        
+        .reject-button {
+            background-color: #FF0000;
+        }
+        
+        .search-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .error-message {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        .permissions-column {
+            position: relative;
+        }
+        
+        .submit-button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Full Week Schedule</h1>
+    <div style="text-align:right;"><a href="{{ url_for('logout') }}" class="link-dark">Logout</a></div>
+    <form method="post" action="{{ url_for('search_workslots_manager') }}" class="search-form">
+        <div class="search-container">
+            <input type="text" name="search_query" placeholder="Date, Shift Type or Name">
+            <button type="submit" class="search-button">Search</button>
+        </div>
+    </form>
+    
+    
+        <table>
+            <tr>
+                <th>Workslots</th>
+                <th>Date</th>
+                <th>Shift Type</th>
+                <th>Status</th>
+                <th>Name</th>
+                <th class="permissions-column">Permissions</th>
+            </tr>
+            {% for day, data in workslots.items() %}
+            {% for shift in data['shifts'] %}
+            <tr>
+                {% if loop.first %}
+                    <td rowspan="{{ data['shifts']|length }}">{{ day }}</td>
+                    <td rowspan="{{ data['shifts']|length }}">{{ data['date'] }}</td>
+                {% endif %}
+                <td>{{ shift['shift-type'] }}</td>
+                <td id="status-{{ day }}-{{ loop.index0 }}">
+                    {{ shift['status'] }}
+                    <div>
+                    {% if shift['status'] == 'Incomplete' %}
+                        {% if not shift['alert'] %}
+                        <span style="color: red;">"Annoucement to All Staff"</span></br>
+                        <span style="color: red;">[ Please bids for this Workslots! ]</span>
+                        
+                            
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </td>
+                <td>{{ shift['name'] }}</td>
+                <td id="permissions-{{ day }}-{{ loop.index0 }}">
+                    {% if shift['status'] == 'Awaiting Approval' %}
+                        <form method="post" action="{{ url_for('approve_shift', shift_id=shift['shift_id'], staff=shift['name']) }}">
+                            <button type="submit" class="approve-button">Approve</button>
+                        </form>
+                        <form method="post" action="{{ url_for('reject_shift', shift_id=shift['shift_id'],staff=shift['name']) }}">
+                            <button type="submit" class="reject-button">Reject</button>
+                        </form>
+                        <input type="hidden" name="shift_status-{{ day }}-{{ loop.index0 }}" value="{{ shift['status'] }}">
+                    {% endif %}
+
+                    {% if shift['status'] == 'Complete (A)' %}
+                        <span style="color: green; font-weight: bold;">Approved</span>
+                        <form method="post" action="{{ url_for('reject_approve' , shift_toReject=shift['shift_id'], staff=shift['name']) }}">
+                            <button type="submit" name="reject-{{ day }}-{{ loop.index0 }}" class="reject-button">Reject Approved</button>
+                        </form>
+                    {% elif shift['status'] == 'Complete (R)' %}
+                        <span style="color: red; font-weight: bold;">Rejected</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            {% endfor %}
+        </table>
+    
+</body>
+</html>
