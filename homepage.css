@@ -1,0 +1,242 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    background: linear-gradient(to right top, blanchedalmond, hsla(18, 90%, 19%, 0.936));
+}
+
+.button-1{
+  background-color: rgba(51, 51, 51, 0.05);
+  border-radius: 8px;
+  border-width: 0;
+  color: #333333;
+  cursor: pointer;
+  display: inline-block;
+  font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  list-style: none;
+  margin: 0;
+  padding: 10px 12px;
+  text-align: center;
+  transition: all 200ms;
+  vertical-align: baseline;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-danger{
+    background-color: rgba(251, 14, 14, 0.53);
+    border-radius: 8px;
+    border-width: 0;
+    color: #333333;
+    cursor: pointer;
+    display: inline-block;
+    font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    list-style: none;
+    margin: 0;
+    padding: 10px 12px;
+    text-align: center;
+    transition: all 200ms;
+    vertical-align: baseline;
+    white-space: nowrap;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+  }
+
+  .button-search{
+    float: left;
+    width: 20%;
+    padding: 12px;
+    background: rgb(14, 81, 204);
+    color: white;
+    font-size: 17px;
+    border: 1px solid grey;
+    border-left: none;
+    cursor: pointer;
+  }
+
+
+
+.left-nav h2{
+    color:hsla(19, 87%, 9%, 0.936);
+    font-family: Georgia;
+    font-weight: bold;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 5px;
+}
+
+nav{
+    width: 100%;
+    background: blanchedalmond;
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 50px;
+}
+
+.middle-nav{
+    display: flex;
+    margin-top: 5px;
+    width: 400px;
+    height: 30px;
+    border-radius: 50px;
+    background: blanchedalmond;
+    padding: 0px 20px;
+}
+
+.middle-nav input{
+    width: 100%;
+    height: 100%;
+    border-radius: 50px;
+    background: rgb(249, 201, 154);
+    border: none;
+    outline: none;
+    padding: 0px 20px;
+}
+
+.middle-nav img{
+    font-size: 16px;
+    margin: 7px auto;
+    cursor: pointer;
+    padding-left: 5px;
+}
+
+.right-nav{
+    width: 60px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+}
+
+.right-nav img{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.container{
+    width: 1270px;
+    margin: auto;
+    padding: 5px 0px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.container .left-side{
+    width: 220px;
+    height: 400px;
+    background: hsla(20, 48%, 63%, 0.936);
+    display: flex;
+    padding: 20px 0px;
+}
+
+.container .left-side a{
+    display: flex;
+    width: 100%;
+    font-size: 16px;
+    color: hsla(19, 87%, 9%, 0.936);
+    text-decoration: none;
+    padding: 0px 7px;
+}
+
+.container .left-side ul{
+    font-size: 16px;
+    list-style: none;
+}
+
+.container .left-side ul li{
+    border-bottom: 1px solid hsla(19, 87%, 9%, 0.936);
+    padding: 20px 10px;
+    display: flex;
+}
+
+.container .left-side ul li img{
+    width: 20px;
+    height: 20px;
+}
+
+.container .right-side{
+    width: 105%;
+    padding: 0px 50px;
+}
+
+.container .right-side .top-content{
+    width: 100%;
+    display: flex;
+}
+
+.container .right-side .details{
+    margin: 5px auto;
+    border-radius: 20px;
+    width: 200px;
+    height: 100px;
+    background: blanchedalmond;
+} 
+
+.container .right-side .details h3{
+    margin: 20px auto;
+    padding: 0px 20px;
+    text-align: center;
+}
+.min-container{
+    width: 100%;
+}
+
+.right-side table{
+    border-collapse: collapse;
+    width: 100%;
+    text-align: center;
+}
+
+.right-side table th{
+    color: blanchedalmond;
+    background: hsla(19, 87%, 9%, 0.936);
+    border: none;
+    padding: 8px 8px;
+}
+
+.right-side table tbody tr td img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.right-side table tbody tr td{
+    border: none;
+    padding: 5px 8px;
+}
+
+.right-side table tbody tr:nth-child(odd){
+    background:rgb(249, 201, 154);
+}
+
+.right-side table tbody tr:nth-child(even){
+    background:blanchedalmond;
+}
+
+.content{
+    width: 100%;
+    height: 450px;
+    overflow: scroll;
+    margin-top: 20px;
+}
+
+:is(.content)::-webkit-scrollbar{
+    width: 0px;
+}
