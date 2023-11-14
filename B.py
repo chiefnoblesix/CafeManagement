@@ -125,7 +125,22 @@ class CreateAccountB:
             return redirect(url_for('SysAdminHome'))
         else:
             return redirect(url_for('render_createAcc'))
-        
+
+class CreateProfileB:
+    def render_create_account():
+        return render_template('newAccnt.html')
+    def create_acc():
+        render_template('newAccnt.html')
+        username = request.form.get('username')
+        password = request.form.get('password')
+        userRole = request.form.get('userRole')
+        job = request.form.get('job')
+        avail = request.form.get('avail')
+        if CreateProfileC.create_newAcc(username, password, userRole, job, avail):
+            return redirect(url_for('SysAdminHome'))
+        else:
+            return redirect(url_for('render_createAcc'))
+
 class DeleteAccB:
     def delete_acc(delete_id):
         if DeleteAccC.delete_acc(delete_id):
