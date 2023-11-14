@@ -79,6 +79,10 @@ class EditAccountC:
 class DeleteAccC:
     def delete_acc(delete_id):
         return StaffEntity.delete_acc(delete_id)
+
+class DeleteProfileC:
+    def delete_profile(delete_id):
+        return StaffEntity.delete_profile(delete_id)
     
 class AdminSearchC:
     def search(query):
