@@ -18,6 +18,7 @@
         background-color: hsla(19, 87%, 9%, 0.936);
         color:blanchedalmond;
         text-align: center;
+        margin: auto;
     }
 
     #new_account_container {
@@ -25,7 +26,7 @@
         padding-top: 20px;
         margin: 0 auto;
         width: 350px;
-        height: 400px;
+        height: 500px;
         background-color: blanchedalmond;
         color: hsla(19, 87%, 9%, 0.936);
     }
@@ -51,10 +52,12 @@
 
 <nav>
     <div class = "div left-nav">
-        <h2>CaiPeng</h2>
+        <h2>CaiPng</h2>
     </div>
     <div class = "right-nav">
         <img src = "{{ url_for('static', filename='styles/icon.jpg')}}" class = "icon">
+        <a href="{{ url_for('logout') }}">
+            <h6>Logout</h6> </a>
     </div>
 </nav>
 
@@ -94,11 +97,10 @@
         </select><br><br>
         <button type="submit" id="submit">Update</button>
         <input type="reset" id="reset" name="reset">
+        <a  href="{{ url_for('SysAdminHome') }}">Back</a>
     </form>
     
-    <a  href="{{ url_for('SysAdminHome') }}">
-        Back
-    </a>
+    
     
     
 </div>
