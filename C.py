@@ -65,6 +65,15 @@ class CreateAccountC:
             return False
         
         return StaffEntity.create_newAcc(username, password, userRole, job, avail)
+
+class CreateProfileC:
+    def create_newAcc(username, password, userRole, job, avail):
+        if job is None:
+            job = 'Non-Staff'
+        if StaffEntity.search_acc_exist(username):
+            return False
+        
+        return StaffEntity.create_newAcc(username, password, userRole, job, avail)
     
 class EditAccountC:
     
