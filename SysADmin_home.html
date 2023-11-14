@@ -1,4 +1,4 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
 
 {% block head %}
 
@@ -8,124 +8,72 @@
 {% endblock %}
 
 {% block body %}
-<style> 
-    #new_account_header {
-        padding:10px;
-        margin-top:50px;
-        margin-left: 465px;
-        width: 350px;
-        height: 70px;
-        background-color: hsla(19, 87%, 9%, 0.936);
-        color:blanchedalmond;
-        text-align: center;
-    }
-
-    #new_account_container {
-        padding-left: 50px;
-        padding-top: 20px;
-        margin: 0 auto;
-        width: 350px;
-        height: 400px;
-        background-color: blanchedalmond;
-        color: hsla(19, 87%, 9%, 0.936);
-    }
-
-    #new_account_container label{
-        color:hsla(19, 87%, 9%, 0.936);
-        font-weight: bold;
-        font-size:17px;
-    }
-
-    #new_account_container input{
-        color:hsla(19, 87%, 9%, 0.936);
-        font-weight: bold;
-        background-color: burlywood;
-    }
-
-    #new_account_container select{
-        color:hsla(19, 87%, 9%, 0.936);
-        font-weight: bold;
-        background-color: burlywood;
-    }
-</style>
-
-<nav>
-    <div class = "div left-nav">
-        <h2>CaiPeng</h2>
+<body>
+    <nav>
+        <div class = "div left-nav">
+            <h2>Cafe CaiPng</h2>
+        </div>
+        <div class = "middle-nav">
+            <form class = "middle-nav" action="{{ url_for('search_results') }}" method="GET">
+                <input type="text" name="query" placeholder="">
+                <button type="submit">Search</button>
+            </form>
+        </div>
+        <div class = "right-nav">
+            <img src = "{{ url_for('static', filename='styles/icon.jpg')}}" class = "icon">
+            <a href="{{ url_for('logout') }}">
+                <h6>Logout</h6> </a>
+        </div>
+    </nav>
+    <div class = "container">
+        <div class = "left-side">
+            <ul>
+                <li><a href="{{ url_for('SysAdminHome') }}">Home</a></li>
+                <li><a href="{{ url_for('render_createAcc') }}">Create Account</a></li>
+            </ul>
+        </div>
+        <div class="min-container">
+            <div class = "right-side">
+                <div class="content">
+                    <h3>All Accounts</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Job</th>
+                                <th>Role</th>
+                                <th>Availability</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- no rooms to choose from if no launched rooms or if no created rooms -->
+                            {% if (all_staff|length < 1) %}
+                            <caption>No available staff currently. Please check back later.</caption>
+                            {% else %}
+                            <!-- iterate over all current created rooms -->
+                            {% for staff in all_staff %}
+                            <tr>
+                                <td>{{ staff.username }}</td>
+                                <td>{{ staff.job }}</td>
+                                <td>
+                                    {{ staff.userRole }}
+                                </td>
+                                <td>
+                                    {{ staff.avail }}
+                                </td>
+                                <td><a href="{{ url_for('render_editAcc', id=staff.username) }}"><button class="button-1">Update</button></a></td>
+                                <td><a href="{{ url_for('delete_acc', delete_id=staff.username) }}"><button class="button-danger">Delete</button></a></td>
+                            </tr>
+                            {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class = "right-nav">
-        <img src = "{{ url_for('static', filename='styles/icon.jpg')}}" class = "icon">
-    </div>
-</nav>
+</body>
 
-<div id="new_account_header">
-    <h1>All Accounts</h1>
-</div>
-<form action="{{ url_for('search_results') }}" method="GET">
-    <input type="text" name="query" placeholder="Search...">
-    <button type="submit">Search</button>
-</form>
-
-
-<div id="new_account_container">
-    <p>
-        <h3>All Accounts</h3>
-    </p>
-    &nbsp;<br />
-    
-    <table >
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Job</th>
-                <th>Role</th>
-                <th>Availability</th>
-                <th>Update/Edit</th>
-                <th>Delete</th>
-            </tr>
-        </thead>
-    
-        <tbody>
-    
-            <!-- no rooms to choose from if no launched rooms or if no created rooms -->
-            {% if (all_staff|length < 1) %}
-            <caption>No available staff currently. Please check back later.</caption>
-            {% else %}
-            <!-- iterate over all current created rooms -->
-            {% for staff in all_staff %}
-            <tr>
-                <!-- display room details if there are rooms with launched status -->
-                
-                <td>{{ staff.username }}</td>
-                <td>{{ staff.job }}</td>
-                <td>
-                    {{ staff.userRole }}
-                </td>
-                <td>
-                    {{ staff.avail }}
-                </td>
-                <td><a href="{{ url_for('render_editAcc', id=staff.username) }}">Update</a></td>
-                <td><a href="{{ url_for('delete_acc', delete_id=staff.username) }}">Delete</a></td>
-                
-                
-            </tr>
-            {% endfor %}
-            {% endif %}
-            
-        </tbody>  
-    </table>
-</div>
-<div class="container mt-3" align="left">
-    
-    <a  href="{{ url_for('render_createAcc') }}">
-        Create Account
-    </a>
-    <a  href="{{ url_for('logout') }}">
-        Logout
-    </a>
-    
-    
-</div>
-
-
-{% endblock %} 
+{% endblock %}
