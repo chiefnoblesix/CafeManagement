@@ -134,8 +134,8 @@ class DeleteAccB:
             return redirect(url_for('SysAdminHome'))
 
 class DeleteProfileB:
-    def delete_acc(delete_id):
-        if DeleteProfileC.delete_acc(delete_id):
+    def delete_profile(delete_id):
+        if DeleteProfileC.delete_profile(delete_id):
             return redirect(url_for('SysAdminHome'))
         else:
             return redirect(url_for('SysAdminHome'))
