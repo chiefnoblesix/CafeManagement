@@ -9,7 +9,10 @@
 {% endblock %}
 
 {% block body %}
-<style> 
+<style>
+    table {
+    width: 100%;
+}
     #new_account_header {
         padding:10px;
         margin-top:50px;
@@ -19,16 +22,18 @@
         background-color: hsla(19, 87%, 9%, 0.936);
         color:blanchedalmond;
         text-align: center;
+        margin: auto;
     }
 
     #new_account_container {
         padding-left: 50px;
         padding-top: 20px;
-        margin: 0 auto;
+        margin: auto;
         width: 350px;
-        height: 400px;
+        height: 500px;
         background-color: blanchedalmond;
         color: hsla(19, 87%, 9%, 0.936);
+        display: table;
     }
 
     #new_account_container label{
@@ -39,8 +44,8 @@
 
     #new_account_container input{
         color:hsla(19, 87%, 9%, 0.936);
-        font-weight: bold;
-        background-color: burlywood;
+        
+        background-color: rgba(167, 164, 163, 0.54);
     }
 
     #new_account_container select{
@@ -48,75 +53,83 @@
         font-weight: bold;
         background-color: burlywood;
     }
+    
 </style>
 
 <nav>
     <div class = "div left-nav">
-        <h2>CaiPeng</h2>
+        <h2>CaiPng</h2>
     </div>
     <div class = "right-nav">
         <img src = "{{ url_for('static', filename='styles/icon.jpg')}}" class = "icon">
+        <a href="{{ url_for('logout') }}">
+            <h6>Logout</h6> </a>
     </div>
 </nav>
 
-<a class="nav-item nav-link" href="{{ url_for('StaffHome') }}">Home</a>
-
+<div id="new_account_header">
+    <h1>Profile</h1>
+</div>
 
 <div id="new_account_container">
-    &nbsp;<br />
-    <table >
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Job</th>
-                <th>Role</th>
-                <th>Availability</th>
-            </tr>
-        </thead>
-    
-        <tbody></tbody>
-            
-            <tr>
-                <!-- display room details if there are rooms with launched status -->
-                
-                <td>{{ staff.username }}</td>
-                <td>{{ staff.job }}</td>
-                <td>
-                    {{ staff.userRole }}
-                </td>
-                <td>
-                    {{ staff.avail }}
-                </td>
-            </tr>
-            
-        </tbody>  
-    </table>
-    <h1>Update Profile</h1>
-    <form action="{{url_for('update_profile')}}"  method="POST">
-        <label for="job">Job:</label>
-        <select name="job" id="job">
-            <option value="Waiter">Waiter</option>
-            <option value="Chef">Chef</option>
-            <option value="Barista">Barista</option>
-            <option value="Cashier">Cashier</option>
-        </select>
+    <input type="hidden" name="olduser" value="{{ id }}">
+        <label for="name">Name</label><br>
+        <input type="text" class="field left" readonly id="name" name="username" value="{{ staff.username }}"><br><br>
         
-        <label for="avail">Availability:</label>
-        <select name="avail" id="avail">
-            <option value="FT">Full-Time</option>
-            <option value="PT">Part-Time</option>
-        </select>
+        <label for="Job">Job</label><br>
+        <input type="text" class="field left" readonly id="job" name="job" value="{{ staff.job }}"><br><br>
+
+        <label for="staff_role">Staff Role</label><br>
+        <input type="text" class="field left" readonly id="role" name="role" value="{{ staff.userRole }}"><br><br>
+
+        <label for="Availability">Availability</label><br>
+        <input type="text" class="field left" readonly id="availability" name="availability" value="{{ staff.avail }}"><br><br>
+
+        <label>Update Your Details</label>
+        <form action="{{url_for('update_profile')}}"  method="POST">
+            <label for="job">Job:</label>
+            <br>
+            <select name="job" id="job">
+                <option value="Waiter">Waiter</option>
+                <option value="Chef">Chef</option>
+                <option value="Barista">Barista</option>
+                <option value="Cashier">Cashier</option>
+            </select>
+            <br>
+            <label for="avail">Availability:</label>
+            <br>
+            <select name="avail" id="avail">
+                <option value="FT">Full-Time</option>
+                <option value="PT">Part-Time</option>
+            </select>
+            <br><br>
+            <input type="submit" value="Update Profile">
+            <a  href="{{ url_for('StaffHome') }}">Back</a>
+        </form>
         
-        <input type="submit" value="Update Profile">
-    </form>
     
 </div>
-<div class="container mt-3" align="left">
-    
-    <a  href="{{ url_for('logout') }}">
-        Logout
-    </a>
-    
+
+<script>
+    // Get the userRole dropdown element
+    var userRoleDropdown = document.getElementById("staff_role");
+
+    // Get the job_section div element
+    var jobSection = document.getElementById("job_section");
+
+    // Add an event listener to the userRole dropdown
+    userRoleDropdown.addEventListener("change", function () {
+        // If "CafeStaff" is selected, show the job_section; otherwise, hide it
+        if (userRoleDropdown.value === "CafeStaff") {
+            jobSection.style.display = "block";
+        } else {
+            jobSection.style.display = "none";
+        }
+    });
+</script>
+
+
+{% endblock %} 
     
 </div>
 
