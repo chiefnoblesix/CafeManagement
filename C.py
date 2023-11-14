@@ -84,6 +84,16 @@ class EditAccountC:
             return StaffEntity.edit_acc(olduser, username, password, userRole, job, avail)
         else:
             return redirect(url_for('SysAdminHome'))
+
+class EditProfileC:
+    
+    def edit_accC(olduser, username, password, userRole, job, avail):
+        if job is None:
+            job = 'Non-Staff'
+        if StaffEntity.search_acc_exist(olduser):
+            return StaffEntity.edit_acc(olduser, username, password, userRole, job, avail)
+        else:
+            return redirect(url_for('SysAdminHome'))
         
 class DeleteAccC:
     def delete_acc(delete_id):
