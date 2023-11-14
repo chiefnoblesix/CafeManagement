@@ -174,6 +174,27 @@ class EditAccountB:
         
         else:
             return render_template('editAccnt.html', id=id)
+
+class EditProfileB:
+    
+    def render_editAcc(id):
+        return render_template('editAccnt.html', id=id)
+        
+    def edit_accB(id):
+        olduser = id
+       
+        if request.method == 'POST':
+            username = request.form.get('username')
+            password = request.form.get('password')
+            userRole = request.form.get('userRole')
+            job = request.form.get('job')
+            avail = request.form.get('avail')
+            EditAccountC.edit_accC(olduser, username, password, userRole, job, avail)
+            return redirect(url_for('SysAdminHome'))
+        
+        else:
+            return render_template('editAccnt.html', id=id)
+
     
 class StaffHomeViewB:
     def render_staffhome():
