@@ -2,7 +2,7 @@
 
 {% block head %}
 
-<title>Edit Account</title>
+<title>New Account</title>
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/homepage.css')}}">
 
 {% endblock %}
@@ -17,6 +17,7 @@
         height: 70px;
         background-color: hsla(19, 87%, 9%, 0.936);
         color:blanchedalmond;
+        margin: auto;
         text-align: center;
     }
 
@@ -25,21 +26,24 @@
         padding-top: 20px;
         margin: 0 auto;
         width: 350px;
-        height: 400px;
+        height: 500px;
         background-color: blanchedalmond;
         color: hsla(19, 87%, 9%, 0.936);
+        display:flex;
     }
 
     #new_account_container label{
         color:hsla(19, 87%, 9%, 0.936);
         font-weight: bold;
         font-size:17px;
+        
     }
 
     #new_account_container input{
         color:hsla(19, 87%, 9%, 0.936);
         font-weight: bold;
         background-color: burlywood;
+        
     }
 
     #new_account_container select{
@@ -51,21 +55,21 @@
 
 <nav>
     <div class = "div left-nav">
-        <h2>CaiPng</h2>
+        <h2>CaiPeng</h2>
     </div>
     <div class = "right-nav">
         <img src = "{{ url_for('static', filename='styles/icon.jpg')}}" class = "icon">
+        <a href="{{ url_for('logout') }}">
+            <h6>Logout</h6> </a>
     </div>
 </nav>
 
 <div id="new_account_header">
-    <h1>EDIT ACCOUNT</h1>
+    <h1>NEW ACCOUNT</h1>
 </div>
 
 <div id="new_account_container">
-    
-    <form id="account_details" action="{{ url_for('editAcc', id=id) }}" method="post">
-        <input type="hidden" name="olduser" value="{{ id }}">
+    <form id="account_details" action="{{ url_for('create_new') }}" method="post">
         <label for="name">Name</label><br>
         <input type="text" id="name" name="username" required><br><br>
         <label for="password">Password</label><br>
@@ -92,16 +96,13 @@
             <option value="FT">Full-Time</option>
             <option value="PT">Part-Time</option>
         </select><br><br>
-        <button type="submit" id="submit">Update</button>
+        <button type="submit" id="submit">Create</button>
         <input type="reset" id="reset" name="reset">
+        <a href="{{ url_for('SysAdminHome') }}"> Back </a>
     </form>
-    
-    <a  href="{{ url_for('SysAdminHome') }}">
-        Back
-    </a>
-    
-    
 </div>
+
+
 
 <script>
     // Get the userRole dropdown element
@@ -121,16 +122,4 @@
     });
 </script>
 
-<!-- <script>
-    function setData() {
-      var name = document.getElementById("name").value;
-      var age = document.getElementById("age").value;
-      var staffRole = document.getElementById("staff_role").value;
-      var password = document.getElementById("password").value;
-      localStorage.setItem("Name", name);
-      localStorage.setItem("Age", age);
-      localStorage.setItem("Staff Role", staffRole);
-      localStorage.setItem("Password", password);
-    }
-</script> -->
 {% endblock %} 
