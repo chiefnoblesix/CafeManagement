@@ -225,6 +225,15 @@ class StaffEntity:
             return True
         else:
             return False
+
+    def delete_profile(delete_id):
+        staff = Staff.query.get(delete_id)
+        if staff:
+            db.session.delete(staff)
+            db.session.commit()
+            return True
+        else:
+            return False
         
     def search(query):
         staff = Staff.query.filter(
