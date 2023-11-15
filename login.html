@@ -12,6 +12,9 @@
     <div class="loginbox">
     <img src="{{ url_for('static', filename='styles/icon.jpg')}}" class="icon" >
         <h1>CAI PENG Login Page</h1>
+                {% if error%}
+            <p><strong>{{error}}</strong></p>
+            {% endif%}
         <form action= "{{ url_for('SubmitLogin') }}" method="POST"> 
             <p>Username</p>
             <input type="text" id= "username" name="username" placeholder="Enter Username">
