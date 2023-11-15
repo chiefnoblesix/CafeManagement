@@ -11,6 +11,7 @@ class LogInBoundary:
     
     def SubmitLogin():
         # return redirect(url_for('StaffBids'))
+        error = None
         if request.method == 'POST':
             username = request.form['username']
             password = request.form['password']
@@ -29,8 +30,9 @@ class LogInBoundary:
                 if role == 'CafeManager':
                     return redirect(url_for('manager_home'))
             else:
-                flash('Invalid username or password', 'error')
-                return render_template('login.html')
+                #flash('Invalid username or password')
+                error = "Invalid username, password or role"
+                return render_template('login.html',error = error)
 
         return render_template('login.html')
     
