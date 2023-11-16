@@ -200,8 +200,17 @@ class StaffEntity:
         db.session.add(new_Acc)
         db.session.commit()
         return True
+
+    def create_newProfile(username, password, userRole, job, avail):
+        new_Profile = Staff(username=username, password=password, job=job, avail=avail, userRole=userRole)
+        db.session.add(new_Profile)
+        db.session.commit()
+        return True
         
     def search_acc_exist(username):
+        return Staff.query.filter_by(username=username).first() is not None
+
+    def search_profile_exist(username):
         return Staff.query.filter_by(username=username).first() is not None
         
     def edit_acc(olduser, username, password, userRole, job, avail):
