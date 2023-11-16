@@ -179,10 +179,10 @@ class EditAccountB:
 
 class EditProfileB:
     
-    def render_editAcc(id):
+    def render_editProfile(id):
         return render_template('editAccnt.html', id=id)
         
-    def edit_accB(id):
+    def edit_ProfileB(id):
         olduser = id
        
         if request.method == 'POST':
@@ -191,7 +191,7 @@ class EditProfileB:
             userRole = request.form.get('userRole')
             job = request.form.get('job')
             avail = request.form.get('avail')
-            EditAccountC.edit_accC(olduser, username, password, userRole, job, avail)
+            EditProfileC.edit_ProfileC(olduser, username, password, userRole, job, avail)
             return redirect(url_for('SysAdminHome'))
         
         else:
