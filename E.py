@@ -225,7 +225,20 @@ class StaffEntity:
             return True
         else:
             return False
-        
+
+    def edit_profile(olduser, username, password, userRole, job, avail):
+        profile = Staff.query.get(olduser)
+        if profile:
+            profile.username = username
+            profile.password = password
+            profile.userRole = userRole
+            profile.job = job
+            profile.avail = avail
+            db.session.commit()
+            return True
+        else:
+            return False
+    
     def delete_acc(delete_id):
         staff = Staff.query.get(delete_id)
         if staff:
